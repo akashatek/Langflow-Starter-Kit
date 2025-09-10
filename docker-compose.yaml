@@ -1,0 +1,65 @@
+services:
+  langflow:
+    image: langflowai/langflow:1.5.0
+    ports:
+      - "7860:7860" # Or your desired Langflow port
+    environment:
+      LANGFLOW_DATABASE_URL: ${LANGFLOW_DATABASE_URI}
+      LANGFLOW_CONFIG_DIR: ${LANGFLOW_CONFIG_DIR}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL}
+    depends_on:
+      - postgres
+      - ollama
+    volumes:
+      - langflow_data:/app/data # Persistent storage for Langflow data
+    user: "${UID:-0}:${GID:-0}" # This line aligns user/group IDs
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+
+  postgres:
+    image: postgres:17.5
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./Postgres:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data # Persistent storage for PostgreSQL data
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+
+  qdrant:
+    image: qdrant/qdrant:v1.15.2 # Or a specific version like v1.9.1
+    ports:
+      - "6333:6333" # Qdrant API port
+      - "6334:6334" # Qdrant gRPC port
+    volumes:
+      - qdrant_data:/qdrant/storage # Persist data outside the container
+
+  ollama:
+    image: ollama/ollama:0.10.1
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama # Persistent storage for Ollama models
+      - ./Ollama/entrypoint.sh:/entrypoint.sh
+    deploy:
+      resources:
+        limits:
+          cpus: '5.0'
+          memory: 10G
+    entrypoint: ["/usr/bin/bash", "/entrypoint.sh"]
+
+volumes:
+  langflow_data:
+  postgres_data:
+  ollama_data:
+  qdrant_data:

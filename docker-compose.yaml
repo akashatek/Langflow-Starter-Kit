@@ -1,10 +1,11 @@
 services:
   langflow:
     image: langflowai/langflow:1.5.0
+
     ports:
       - "7860:7860" # Or your desired Langflow port
     environment:
-      LANGFLOW_DATABASE_URL: ${LANGFLOW_DATABASE_URI}
+      LANGFLOW_DATABASE_URL: ${LANGFLOW_DATABASE_URL}
       LANGFLOW_CONFIG_DIR: ${LANGFLOW_CONFIG_DIR}
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL}
     depends_on:
@@ -46,6 +47,7 @@ services:
 
   ollama:
     image: ollama/ollama:0.10.1
+
     ports:
       - "11434:11434"
     volumes:

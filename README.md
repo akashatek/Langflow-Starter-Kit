@@ -100,17 +100,17 @@ Create collections for RAG Ollama mxbai-embed-large embedding.
 <a id="Ollama"></a>
 ## Ollama
 
-Ollama is automatically downloading a [tinyllama:1.1b](https://ollama.com/library/tinyllama) model and an [mxbai](https://ollama.com/library/mxbai-embed-large) embedding.
+Ollama is automatically downloading a [llama3.2:1b](https://ollama.com/library/llama3.2) model and an [mxbai](https://ollama.com/library/mxbai-embed-large) embedding.
 
 List of Ollama installed models
 ```
 > curl -s http://localhost:11434/api/tags | jq  '.models[].model'
 
 "mxbai-embed-large:latest"
-"tinyllama:1.1b"
+"llama3.2:1b"
 ```
 
-Test tinyllama:1.1b model
+Test llama3.2:1b model
 ```
 > curl -s -X POST http://localhost:11434/api/generate -d '{
    "model": "llama3.2:1b",

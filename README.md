@@ -1,4 +1,4 @@
-# OLQP
+# Langflow Starter Kit
 Ollama, Langflow, Qdrant, and Postgres starter kit.
 
 Table Of Content:

@@ -1,3 +1,5 @@
+name: olqp
+
 services:
   langflow:
     image: langflowai/langflow:1.5.0
@@ -12,7 +14,9 @@ services:
       - postgres
       - ollama
     volumes:
-      - langflow-data:/app/data # Persistent storage for Langflow data
+      - langflow_data:/app/data # Persistent storage for Langflow data
+    networks:
+      - olqp
     user: "${UID:-0}:${GID:-0}" # This line aligns user/group IDs
     deploy:
       resources:
@@ -30,7 +34,9 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - ./Postgres:/docker-entrypoint-initdb.d
-      - postgres-data:/var/lib/postgresql/data # Persistent storage for PostgreSQL data
+      - postgres_data:/var/lib/postgresql/data # Persistent storage for PostgreSQL data
+    networks:
+      - olqp
     deploy:
       resources:
         limits:
@@ -43,7 +49,14 @@ services:
       - "6333:6333" # Qdrant API port
       - "6334:6334" # Qdrant gRPC port
     volumes:
-      - qdrant-data:/qdrant/storage # Persist data outside the container
+      - qdrant_data:/qdrant/storage # Persist data outside the container
+    networks:
+      - olqp
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
 
   ollama:
     image: ollama/ollama:0.10.1
@@ -51,8 +64,10 @@ services:
     ports:
       - "11434:11434"
     volumes:
-      - ollama-data:/root/.ollama # Persistent storage for Ollama models
+      - ollama_data:/root/.ollama # Persistent storage for Ollama models
       - ./Ollama/entrypoint.sh:/entrypoint.sh
+    networks:
+      - olqp
     deploy:
       resources:
         limits:
@@ -61,7 +76,11 @@ services:
     entrypoint: ["/usr/bin/bash", "/entrypoint.sh"]
 
 volumes:
-  langflow-data:
-  postgres-data:
-  ollama-data:
-  qdrant-data:
+  langflow_data:
+  postgres_data:
+  ollama_data:
+  qdrant_data:
+
+networks:
+  olqp:
+    name: olqp

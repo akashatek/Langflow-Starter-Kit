@@ -2,7 +2,8 @@ name: olqp
 
 services:
   langflow:
-    image: langflowai/langflow:1.5.0
+    image: langflowai/langflow:1.7.3
+    container_name: langflow
 
     ports:
       - "7860:7860" # Or your desired Langflow port
@@ -25,7 +26,9 @@ services:
           memory: 2G
 
   postgres:
-    image: postgres:17.5
+    image: postgres:17.0
+    container_name: postgres
+
     ports:
       - "5432:5432"
     environment:
@@ -44,7 +47,8 @@ services:
           memory: 2G
 
   qdrant:
-    image: qdrant/qdrant:v1.15.2 # Or a specific version like v1.9.1
+    image: qdrant/qdrant:v1.17 # Or a specific version like v1.9.1
+    container_name: qdrant
     ports:
       - "6333:6333" # Qdrant API port
       - "6334:6334" # Qdrant gRPC port
@@ -59,7 +63,8 @@ services:
           memory: 2G
 
   ollama:
-    image: ollama/ollama:0.10.1
+    image: ollama/ollama:0.17.0
+    container_name: ollama
 
     ports:
       - "11434:11434"

@@ -2,7 +2,7 @@ name: olqp
 
 services:
   langflow:
-    image: langflowai/langflow:1.7.3
+    image: langflowai/langflow:1.8.0
     container_name: langflow
 
     ports:
